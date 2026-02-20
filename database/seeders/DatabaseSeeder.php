@@ -14,8 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
+            PetSeeder::class,
         ]);
-        
-        // Seeders para pets serão adicionados posteriormente
     }
 }
