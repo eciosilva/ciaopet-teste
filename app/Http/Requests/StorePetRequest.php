@@ -32,6 +32,7 @@ class StorePetRequest extends FormRequest
             'peso' => 'nullable|numeric|min:0|max:999.99',
             'numero_microchip' => 'nullable|string|max:255|unique:pets,numero_microchip',
             'observacoes' => 'nullable|string|max:5000',
+            'tutor_id' => 'nullable|exists:users,id',
         ];
     }
 

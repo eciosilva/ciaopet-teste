@@ -42,4 +42,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the pets that belong to the user (tutor)
+     */
+    public function pets()
+    {
+        return $this->hasMany(Pet::class, 'tutor_id');
+    }
 }

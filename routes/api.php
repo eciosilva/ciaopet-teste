@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\PetController;
 
 /*
@@ -15,20 +16,34 @@ use App\Http\Controllers\API\PetController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes (Unprotected)
+|--------------------------------------------------------------------------
+*/
+Route::prefix('auth')->group(function () {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
 });
 
 /*
 |--------------------------------------------------------------------------
-| Pet API Routes
+| Protected Routes (Require Authentication)
 |--------------------------------------------------------------------------
 */
-// Get form options (gêneros, espécies comuns) - deve vir antes do resource
-Route::get('pets/options', [PetController::class, 'options']);
-
-// CRUD routes for pets
-Route::apiResource('pets', PetController::class);
-
-// Rotas para CRUD de Pets
-// Serão implementadas posteriormente
+Route::middleware('auth:sanctum')->group(function () {
+    // Auth routes for authenticated users
+    Route::prefix('auth')->group(function () {
+        Route::post('logout', [AuthController::class, 'logout']);
+        Route::get('me', [AuthController::class, 'me']);
+    });
+    
+    // Pet API Routes (Protected)
+    Route::get('pets/options', [PetController::class, 'options']);
+    Route::apiResource('pets', PetController::class);
+    
+    // Legacy user route
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+});

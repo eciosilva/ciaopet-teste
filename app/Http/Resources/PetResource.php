@@ -26,6 +26,11 @@ class PetResource extends JsonResource
             'peso_formatado' => $this->peso_formatado,
             'numero_microchip' => $this->numero_microchip,
             'observacoes' => $this->observacoes,
+            'tutor' => $this->when($this->tutor, [
+                'id' => $this->tutor?->id,
+                'name' => $this->tutor?->name,
+                'email' => $this->tutor?->email,
+            ]),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             

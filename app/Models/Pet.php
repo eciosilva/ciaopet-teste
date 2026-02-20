@@ -22,6 +22,7 @@ class Pet extends Model
         'peso',
         'numero_microchip',
         'observacoes',
+        'tutor_id',
     ];
 
     /**
@@ -86,5 +87,13 @@ class Pet extends Model
     public function scopeByGenero($query, $genero)
     {
         return $query->where('genero', $genero);
+    }
+
+    /**
+     * Get the tutor (user) that owns the pet
+     */
+    public function tutor()
+    {
+        return $this->belongsTo(User::class, 'tutor_id');
     }
 }

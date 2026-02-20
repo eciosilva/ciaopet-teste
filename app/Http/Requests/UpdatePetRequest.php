@@ -39,6 +39,7 @@ class UpdatePetRequest extends FormRequest
                 Rule::unique('pets', 'numero_microchip')->ignore($petId)
             ],
             'observacoes' => 'nullable|string|max:5000',
+            'tutor_id' => 'nullable|exists:users,id',
         ];
     }
 
