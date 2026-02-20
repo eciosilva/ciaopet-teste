@@ -14,8 +14,11 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Delete existing users to avoid duplicates
-        User::truncate();
+        // Only create users if table is empty
+        if (User::count() > 0) {
+            $this->command->info('Tabela de usuários já possui dados. Pulando UserSeeder.');
+            return;
+        }
 
         // Create sample users
         $users = [

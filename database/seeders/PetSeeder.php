@@ -13,6 +13,12 @@ class PetSeeder extends Seeder
      */
     public function run(): void
     {
+        // Only create pets if table is empty
+        if (Pet::count() > 0) {
+            $this->command->info('Tabela de pets já possui dados. Pulando PetSeeder.');
+            return;
+        }
+
         $pets = [
             [
                 'nome' => 'Rex',
