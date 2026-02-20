@@ -236,6 +236,29 @@ GET /api/pets/options
 }
 ```
 
+## 🧪 **Testando a API**
+
+### **Postman Workspace**
+
+Para facilitar os testes da API, está disponível um workspace completo no Postman com todas as requisições pré-configuradas:
+
+🔗 **[Acessar CiaoPet Workspace no Postman](https://creatix-brasil.postman.co/workspace/CiaoPet~20aedc4e-bade-4cac-91c8-30a73caccbb5/collection/14495808-678e5dab-3941-4407-b25b-7e4ad3738a1c?action=share&creator=14495808&active-environment=14495808-5b16cb10-eec9-4cef-a174-cf87ffb73c9b)**
+
+**O workspace inclui:**
+- ✅ Todas as rotas da API organizadas por categoria
+- ✅ Exemplos de requisições com dados de teste  
+- ✅ Configuração de ambiente para desenvolvimento local
+- ✅ Scripts automáticos para captura de tokens JWT
+- ✅ Documentação detalhada de cada endpoint
+
+### **Ferramentas Alternativas**
+
+Você também pode testar usando:
+- **cURL** (exemplos nos tópicos acima)
+- **Insomnia**
+- **HTTPie** 
+- **Script próprio** consultando a [documentação da API](api-reference.md)
+
 ## 🔐 **Autenticação JWT**
 
 ### **Rotas Protegidas**
