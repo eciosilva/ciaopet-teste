@@ -79,24 +79,31 @@ O sistema estará disponível em:
 }
 ```
 
-### 🔍 **Filtros Disponíveis**
+### 🔍 **Filtros e Paginação Disponíveis**
 
 **Query Parameters para `/api/pets`:**
+- `page` - Número da página (padrão: 1)
+- `per_page` - Items por página (padrão: 15, máx: 100)
 - `especie` - Filtrar por espécie
 - `genero` - Filtrar por gênero
 - `search` - Busca por nome, raça ou microchip
 - `sort_by` - Ordenar por: nome|especie|created_at|data_nascimento
 - `sort_direction` - asc|desc
-- `per_page` - Items por página (máx: 100)
 
 ### 💡 **Exemplos de Uso**
 
-**1. Listar pets com filtros:**
+**1. Listar pets com filtros e paginação:**
 ```bash
-GET /api/pets?especie=Cachorro&search=rex&per_page=10
+GET /api/pets?page=2&per_page=5&especie=Cachorro&search=rex
 ```
 
-**2. Criar pet:**
+**2. Navegação entre páginas:**
+```bash
+GET /api/pets?page=1          # Primeira página (padrão 15 itens)
+GET /api/pets?page=2&per_page=10  # Segunda página com 10 itens
+```
+
+**3. Criar pet:**
 ```bash
 POST /api/pets
 Content-Type: application/json
@@ -117,4 +124,25 @@ Content-Type: application/json
 ```bash
 GET /api/pets/options
 # Retorna: {"generos": [...], "especies_comuns": [...]}
+```
+
+### 📄 **Estrutura de Resposta com Paginação**
+
+```json
+{
+  "success": true,
+  "data": [...],  // Array com os pets da página atual
+  "pagination": {
+    "current_page": 2,    // Página atual
+    "per_page": 15,       // Itens por página
+    "total": 50,          // Total de registros
+    "last_page": 4        // Última página disponível
+  },
+  "links": {
+    "first": "http://.../api/pets?page=1",
+    "last": "http://.../api/pets?page=4", 
+    "prev": "http://.../api/pets?page=1",
+    "next": "http://.../api/pets?page=3"
+  }
+}
 ```
