@@ -285,6 +285,148 @@ Todas as rotas de pets (`/api/pets/*`) requerem autenticação via token JWT.
 - Campo `tutor_id` na tabela pets referencia `users.id`
 - Ao buscar pets, dados do tutor são incluídos automaticamente
 
+## 🧪 **Testes Automatizados**
+
+O sistema possui uma **suite completa de testes** que garantem a qualidade e confiabilidade da API.
+
+### **📊 Cobertura de Testes**
+
+**Estatísticas:**
+- ✅ **48 testes implementados**
+- ✅ **212 assertivas verificadas**
+- ✅ **Cobertura completa** de funcionalidades críticas
+- ⚡ **Execução em ~2 segundos**
+
+### **🔬 Tipos de Testes**
+
+#### **1. Testes de Funcionalidade (Feature Tests)**
+
+**Autenticação** (`tests/Feature/AuthTest.php`)
+- ✅ Registro de usuários com validação completa
+- ✅ Login/logout com tokens JWT
+- ✅ Proteção de rotas autenticadas
+- ✅ Tratamento de credenciais inválidas
+- ✅ Endpoints protegidos e desprotegidos
+
+**CRUD de Pets** (`tests/Feature/PetCrudTest.php`)
+- ✅ Operações completas: Create, Read, Update, Delete
+- ✅ Validações de entrada e regras de negócio
+- ✅ Filtros avançados e paginação
+- ✅ Tratamento de erros 404 (Route Model Binding)
+- ✅ Proteção por autenticação JWT
+- ✅ Endpoint de opções para formulários
+- ✅ Microchip único e soft delete
+
+#### **2. Testes Unitários (Unit Tests)**
+
+**Modelo User** (`tests/Unit/UserModelTest.php`)
+- ✅ Atributos fillable e hidden
+- ✅ Relacionamento com pets (hasMany)
+- ✅ Geração de tokens API
+- ✅ Funcionamento do factory
+- ✅ Traits do Laravel Sanctum
+
+**Modelo Pet** (`tests/Unit/PetModelTest.php`)
+- ✅ Soft deletes e restauração
+- ✅ Acessors customizados (idade, peso formatado)
+- ✅ Relacionamento com tutor (belongsTo)
+- ✅ Validações de atributos únicos
+- ✅ Scopes de busca e filtro
+- ✅ Factory com estados variados
+
+### **🎯 Cenários Testados**
+
+#### **Autenticação**
+- Registro com dados válidos e inválidos
+- Login com credenciais corretas e incorretas
+- Logout e invalidação de tokens
+- Acesso a endpoints protegidos
+- Validação de middleware de autenticação
+
+#### **CRUD Completo**
+- Criação de pets com dados válidos
+- Validação de campos obrigatórios
+- Atualização parcial e completa
+- Remoção com soft delete
+- Busca por ID existente e inexistente
+- Listagem com filtros e paginação
+
+#### **Regras de Negócio**
+- Microchip único por pet
+- Relacionamento opcional pet-tutor
+- Cálculo automático de idade
+- Formatação de peso
+- Soft delete preservando histórico
+
+### **🚀 Executando os Testes**
+
+#### **Todos os Testes**
+```bash
+# Executa suite completa (48 testes)
+docker-compose exec app php artisan test
+
+# Com detalhes de cobertura
+docker-compose exec app php artisan test --coverage
+```
+
+#### **Testes Específicos**
+```bash
+# Apenas testes de autenticação
+docker-compose exec app php artisan test --filter AuthTest
+
+# Apenas testes CRUD de pets  
+docker-compose exec app php artisan test --filter PetCrudTest
+
+# Apenas testes unitários de modelos
+docker-compose exec app php artisan test tests/Unit/
+
+# Teste específico por nome
+docker-compose exec app php artisan test --filter test_user_can_login_with_correct_credentials
+```
+
+#### **Testes com Relatórios**
+```bash
+# Relatório resumido
+docker-compose exec app php artisan test --compact
+
+# Relatório detalhado com tempo
+docker-compose exec app php artisan test --verbose
+
+# Paralelo (mais rápido)
+docker-compose exec app php artisan test --parallel
+```
+
+### **📁 Estrutura dos Testes**
+
+```
+tests/
+├── Feature/                    # Testes de funcionalidades
+│   ├── AuthTest.php           # Autenticação JWT
+│   └── PetCrudTest.php        # API CRUD completa
+├── Unit/                      # Testes unitários
+│   ├── UserModelTest.php      # Modelo User
+│   └── PetModelTest.php       # Modelo Pet
+├── TestCase.php               # Classe base
+└── CreatesApplication.php     # Bootstrap da aplicação
+```
+
+### **🔧 Configuração de Testes**
+
+- **Banco**: SQLite em memória (isolado)
+- **Autenticação**: Laravel Sanctum com tokens
+- **Factories**: Faker para dados realistas
+- **Traits**: RefreshDatabase para isolamento
+- **Assertivas**: Estruturas JSON e banco de dados
+
+### **💡 Vantagens da Suite**
+
+- ✅ **Confiança** para deployments
+- ✅ **Documentação viva** do comportamento
+- ✅ **Detecção precoce** de bugs
+- ✅ **Refatoração segura**  
+- ✅ **Validação automática** de alterações
+- ✅ **Base sólida** para desenvolvimento contínuo
+
 ---
 
 *Sistema desenvolvido com Laravel 12, PHP 8.4, MySQL 8.0 e Docker*
