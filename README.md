@@ -53,7 +53,16 @@ O sistema estará disponível em:
 
 ## 📚 API Endpoints
 
-### 🐾 **Pets CRUD**
+### � **Autenticação (Desprotegidas)**
+
+| Método | URL | Descrição |
+|--------|-----|-----------|
+| `POST` | `/api/auth/register` | Cadastro de usuário |
+| `POST` | `/api/auth/login` | Login e geração de token |
+| `POST` | `/api/auth/logout` | Logout (invalida token) |
+| `GET` | `/api/auth/me` | Dados do usuário autenticado |
+
+### 🐾 **Pets CRUD (Protegidas)** 🔒
 
 | Método | URL | Descrição |
 |--------|-----|-----------|
@@ -75,9 +84,35 @@ O sistema estará disponível em:
   "data_nascimento": "date YYYY-MM-DD (opcional)",
   "peso": "decimal até 999.99 kg (opcional)",
   "numero_microchip": "string único (opcional)",
-  "observacoes": "text até 5000 chars (opcional)"
+  "observacoes": "text até 5000 chars (opcional)",
+  "tutor_id": "integer - ID do usuário tutor (opcional)"
 }
 ```
+
+### 👤 **Campos do Usuário**
+
+```json
+{
+  "name": "string (obrigatório)",
+  "email": "string email único (obrigatório)", 
+  "password": "string min 8 chars (obrigatório)",
+  "password_confirmation": "string - confirmação (registro)"
+}
+```
+
+### 🔐 **Autenticação**
+
+**Todas as rotas de pets requerem autenticação via Bearer Token.**
+
+1. **Registrar ou fazer login** para obter token
+2. **Incluir header** em todas as requisições protegidas:
+   ```bash
+   Authorization: Bearer SEU_TOKEN_AQUI
+   ```
+
+**Usuários de teste disponíveis:**
+- **João Silva:** `joao@ciaopet.com` / `password123`
+- **Maria Santos:** `maria@ciaopet.com` / `password123`
 
 ### 🔍 **Filtros e Paginação Disponíveis**
 
@@ -92,35 +127,79 @@ O sistema estará disponível em:
 
 ### 💡 **Exemplos de Uso**
 
-**1. Listar pets com filtros e paginação:**
+**1. Login para obter token:**
 ```bash
-GET /api/pets?page=2&per_page=5&especie=Cachorro&search=rex
-```
-
-**2. Navegação entre páginas:**
-```bash
-GET /api/pets?page=1          # Primeira página (padrão 15 itens)
-GET /api/pets?page=2&per_page=10  # Segunda página com 10 itens
-```
-
-**3. Criar pet:**
-```bash
-POST /api/pets
+POST /api/auth/login
 Content-Type: application/json
 
 {
-  "nome": "Rex",
-  "especie": "Cachorro",
-  "raca": "Golden Retriever", 
-  "genero": "Macho",
-  "data_nascimento": "2020-05-15",
-  "peso": 25.5,
-  "numero_microchip": "123456789012345",
-  "observacoes": "Pet muito dócil e brincalhão."
+  "email": "joao@ciaopet.com",
+  "password": "password123"
 }
 ```
 
-**3. Buscar opções para formulários:**
+**2. Listar pets (com autenticação):**
+```bash
+GET /api/pets?page=1&per_page=5&especie=Cachorro
+Authorization: Bearer SEU_TOKEN_AQUI
+```
+
+**3. Criar pet com tutor:**
+```bash
+POST /api/pets
+Content-Type: application/json
+Authorization: Bearer SEU_TOKEN_AQUI
+
+{
+  "nome": "Thor",
+  "especie": "Cachorro",
+  "raca": "Pastor Alemão",
+  "genero": "Macho",
+  "data_nascimento": "2021-06-10", 
+  "peso": 35.5,
+  "tutor_id": 1,
+  "observacoes": "Pet muito protetor e obediente."
+}
+```
+
+**4. Registrar novo usuário:**
+```bash
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "name": "João Silva",
+  "email": "joao@exemplo.com",
+  "password": "123456",
+  "password_confirmation": "123456"
+}
+```
+
+**5. Fazer login:**
+```bash
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "joao@exemplo.com", 
+  "password": "123456"
+}
+# Retorna: {"success":true,"data":{"user":{...},"token":"Bearer_Token_Here"}}
+```
+
+**6. Obter dados do usuário autenticado:**
+```bash
+GET /api/auth/me
+Authorization: Bearer SEU_TOKEN_AQUI
+```
+
+**7. Fazer logout:**
+```bash
+POST /api/auth/logout
+Authorization: Bearer SEU_TOKEN_AQUI
+```
+
+**8. Buscar opções para formulários:**
 ```bash
 GET /api/pets/options
 # Retorna: {"generos": [...], "especies_comuns": [...]}
@@ -146,3 +225,28 @@ GET /api/pets/options
   }
 }
 ```
+
+## 🔐 **Autenticação JWT**
+
+### **Rotas Protegidas**
+Todas as rotas de pets (`/api/pets/*`) requerem autenticação via token JWT.
+
+### **Rotas Públicas**
+- `POST /api/auth/register` - Registro de usuário
+- `POST /api/auth/login` - Login de usuário
+
+### **Como usar:**
+1. Registre-se ou faça login para obter um token
+2. Inclua o token no cabeçalho de todas as requisições protegidas:
+   ```bash
+   Authorization: Bearer SEU_TOKEN_AQUI
+   ```
+3. O token expira conforme configuração do Laravel Sanctum
+
+### **Relacionamento Pet-Tutor**
+- Cada pet pode ter um tutor (usuário) opcional
+- Campo `tutor_id` na tabela pets referencia `users.id`
+- Ao buscar pets, dados do tutor são incluídos automaticamente
+
+---
+*Sistema desenvolvido com Laravel 12, PHP 8.4, MySQL 8.0 e Docker*
